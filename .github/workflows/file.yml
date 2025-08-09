@@ -1,0 +1,40 @@
+name: Upload artifact
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: karol-brejna-i/webpage-screenshot-action@v1
+        with:
+          url: https://m.youtube.com
+          output: web.png
+          
+      - uses: karol-brejna-i/webpage-screenshot-action@v1
+        with:
+          url: https://whatismyipaddress.com/
+          output: ip.png
+          mode: page
+          
+      - uses: karol-brejna-i/webpage-screenshot-action@v1
+        with:
+          url: https://ipinfo.io/what-is-my-ip
+          output: ip2.png
+          mode: page
+          
+      - run: wget https://www.youtube.com
+      
+      - name: 'Tar files'
+        run: tar -cvzf file.tar.gz *
+  
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: file.tar.gz  #${{ github.workspace }}/*.png
+          compression-level: 9 # maximum compression
+          retention-days: 2
